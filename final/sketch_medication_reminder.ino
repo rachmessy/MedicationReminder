@@ -4,6 +4,12 @@
 
 //source for display information: https://www.youtube.com/watch?v=SHORUnKgpKE&t=394s
 
+//The way this works currently:
+//on start up it should display "no weight detected" on the lcd display
+//then if you place a weight on the tray: the lcd should write whatever the weight sensor detected as "weight: xx.xx grams"
+//if you remove the weight before 10 seconds the LED should not turn on at all.
+//if you hold the weight on for more than 10 seconds, the LED should then turn on: this is to mimic the reminder function
+//if you remove the weight after 10 seconds the LED should turn back off.
 
 // defining pin connections
 // HX711 dout will be in A4 pin and sck in A5 pin
