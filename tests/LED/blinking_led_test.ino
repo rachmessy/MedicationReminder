@@ -1,3 +1,5 @@
+//followed this tutorial: https://docs.arduino.cc/built-in-examples/basics/Blink/
+
 //set led pin to 6
 const int led_pin = 6;
 
