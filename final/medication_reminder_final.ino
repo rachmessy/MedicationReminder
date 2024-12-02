@@ -8,6 +8,7 @@
 const int HX711_1_dout = 4;
 const int HX711_2_dout = 3; 
 const int HX711_3_dout = 2; 
+//all HX711 will connect to pin 5
 const int HX711_sck = 5;  
 
 //defining pins for leds
@@ -66,6 +67,9 @@ void setup() {
 }
 
 void loop() {
+
+    static unsigned long last_update_time = 0;
+    
     //read the weights from all scales
     float weight1 = scale_1.get_units(1);
     float weight2 = scale_2.get_units(1);
@@ -93,15 +97,15 @@ void handle_sensor(int sensor, float weight, float upper_limit, int led_pin, uns
 
         //calculate the time that has passed
         unsigned long passed_time = millis() - timer;
-        unsigned int seconds = (passed_time/1000) % 60;
-        unsigned int minutes = (passed_time/60000) % 60;
-
+        unsigned long seconds = (passed_time/1000) % 60;
+        unsigned long minutes = (passed_time/60000) % 60;
+        unsigned long hours = (passed_time/3600000) % 24;
         //show the time that has passed on the display
         lcd.setCursor(0, lcd_row);
         lcd.print("Slot ");
         lcd.print(sensor);
         lcd.print(": ");
-        lcd.print(display_time(minutes,seconds));
+        lcd.print(display_time(hours, minutes,seconds));
 
         //check if ten seconds has passed
         if (!led_on && passed_time >= 10000) {
@@ -124,20 +128,24 @@ void handle_sensor(int sensor, float weight, float upper_limit, int led_pin, uns
         lcd.setCursor(0, lcd_row);
         lcd.print("Slot ");
         lcd.print(sensor);
-        lcd.print(": 00:00");
+        lcd.print(": 00:00:00");
         // Serial.print("sensor ");
         // Serial.print(sensor);
         // Serial.println(": weight not detected so reestting.");
     }
 }
 
-String display_time(unsigned int minutes, unsigned int seconds) {
-    //need to display MM:SS format
+String display_time(unsigned int hours, unsigned int minutes, unsigned int seconds) {
+    //display in HH:MM:SS format
     String formatted_time = "";
+    if (hours < 10) formatted_time += "0";
+    formatted_time += String(hours) + ":";
     if (minutes < 10) formatted_time += "0";
     formatted_time += String(minutes) + ":";
     if (seconds < 10) formatted_time += "0";
     formatted_time += String(seconds);
     return formatted_time;
 }
+
+
 
